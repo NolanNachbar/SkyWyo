@@ -1,0 +1,53 @@
+---
+const testimonials = [
+  {
+    quote: "Apex didn't just photograph the ranch — they filmed the land the way it deserves to be seen. The Bar S sold in fourteen days. The buyer told us the film is what brought him in.",
+    name: "R. Whitfield",
+    role: "Ranch Owner",
+    location: "Jackson Hole, WY",
+    result: "Sold · 14 days"
+  },
+  {
+    quote: "We've listed Wyoming properties for twenty years. Nothing moves a buyer like a well-made film. Apex is the only studio I recommend without reservation.",
+    name: "M. Kellner",
+    role: "Ranch Broker",
+    location: "Casper, WY",
+    result: "3 listings · All closed"
+  },
+  {
+    quote: "The Wind River House was difficult to communicate on paper — glass and corten on a river, forty miles from anything. The film explained it in ninety seconds. Thirty-one days to close.",
+    name: "S. Dynia",
+    role: "Architect",
+    location: "Pinedale, WY",
+    result: "Sold · 31 days"
+  }
+];
+---
+
+<section class="page-px py-30 md:py-[160px] border-t border-rule">
+  <div class="max-w-[1400px] mx-auto">
+    <div class="flex items-center gap-3 mb-16 md:mb-[80px] reveal">
+      <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+      <span class="font-mono text-[var(--text-xs)] tracking-[0.22em] uppercase text-paper-dim">Client Perspective</span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-[48px]">
+      {testimonials.map((t, i) => (
+        <figure class={`reveal delay-${i * 75}`}>
+          <blockquote class="m-0 text-[var(--text-base)] text-paper-2 leading-relaxed font-body">
+            &ldquo;{t.quote}&rdquo;
+          </blockquote>
+          <figcaption class="mt-8 pt-5 border-t border-rule">
+            <div class="flex justify-between items-end gap-4">
+              <div>
+                <div class="text-paper font-display text-[var(--text-sm)] font-medium">{t.name}</div>
+                <div class="font-mono text-[var(--text-xs)] tracking-[0.12em] text-paper-mute uppercase mt-1">{t.role} · {t.location}</div>
+              </div>
+              <div class="font-mono text-[var(--text-xs)] tracking-[0.12em] text-accent uppercase whitespace-nowrap">{t.result}</div>
+            </div>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>
