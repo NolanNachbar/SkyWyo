@@ -7,7 +7,7 @@ gsap.registerPlugin(ScrollTrigger);
 // Scroll-scrubbed drone footage. Frames are extracted from the source video
 // into /public/hero/frames/ (see scripts/extract-hero-frames.sh) and drawn to a
 // canvas as the scroll position advances — the "Apple-style" technique.
-const FRAME_COUNT = 180;
+const FRAME_COUNT = 120;
 const framePath = (i: number) =>
   `/hero/frames/frame_${String(i + 1).padStart(4, '0')}.jpg`;
 const POSTER = framePath(0);
@@ -198,7 +198,7 @@ export default function CanvasHero() {
     const scrollTrigger = ScrollTrigger.create({
       trigger: containerRef.current,
       start: 'top top',
-      end: isMobile ? '+=240%' : '+=340%',
+      end: isMobile ? '+=160%' : '+=220%',
       pin: true,
       scrub: isMobile ? 1 : 0.5,
       onUpdate: (self) => {
