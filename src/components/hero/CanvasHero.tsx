@@ -4,12 +4,13 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const IMAGES = [
-  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=2600&q=85',
-  'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=2600&q=85',
-  'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=2600&q=85',
-  'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=2600&q=85',
-];
+// Scroll-scrubbed drone footage. Frames are extracted from the source video
+// into /public/hero/frames/ (see scripts/extract-hero-frames.sh) and drawn to a
+// canvas as the scroll position advances — the "Apple-style" technique.
+const FRAME_COUNT = 180;
+const framePath = (i: number) =>
+  `/hero/frames/frame_${String(i + 1).padStart(4, '0')}.jpg`;
+const POSTER = framePath(0);
 
 interface Chapter {
   label: string;
@@ -95,8 +96,10 @@ export default function CanvasHero() {
   const [currentChapter, setCurrentChapter] = useState(0);
   const [isInteractive, setIsInteractive] = useState(false);
   const [isLowMotion, setIsLowMotion] = useState(false);
-  const imagesRef = useRef<HTMLImageElement[]>([]);
-  const animationState = useRef({ currentFrame: 0 });
+  const imagesRef = useRef<(HTMLImageElement | undefined)[]>([]);
+  const loadedRef = useRef(0);
+  const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
+  const currentFrameRef = useRef(0);
 
   useEffect(() => {
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -110,124 +113,118 @@ export default function CanvasHero() {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const context = canvas.getContext('2d', { alpha: false });
+    if (!context) return;
+    ctxRef.current = context;
 
-    function render(index: number) {
-      if (!canvas || !context || !imagesRef.current[index]) return;
+    // Size the backing store to the viewport (done on init + resize, not per-frame).
+    function sizeCanvas() {
+      if (!canvas) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(window.innerWidth * dpr);
+      canvas.height = Math.round(window.innerHeight * dpr);
+    }
 
-      const img = imagesRef.current[index];
-      const canvasWidth = window.innerWidth * window.devicePixelRatio;
-      const canvasHeight = window.innerHeight * window.devicePixelRatio;
+    // Draw frame `index`, or the nearest already-loaded frame so the scrub
+    // never flashes blank while later frames are still downloading.
+    function drawFrame(index: number) {
+      if (!canvas || !context) return;
+      let img = imagesRef.current[index];
+      if (!img) {
+        for (let d = 1; d < FRAME_COUNT; d++) {
+          if (imagesRef.current[index - d]) { img = imagesRef.current[index - d]; break; }
+          if (imagesRef.current[index + d]) { img = imagesRef.current[index + d]; break; }
+        }
+      }
+      if (!img) return;
 
-      canvas.width = canvasWidth;
-      canvas.height = canvasHeight;
-
+      const cw = canvas.width;
+      const ch = canvas.height;
       const imgRatio = img.width / img.height;
-      const canvasRatio = canvasWidth / canvasHeight;
+      const canvasRatio = cw / ch;
 
       let drawWidth, drawHeight, offsetX, offsetY;
-
       if (imgRatio > canvasRatio) {
-        drawHeight = canvasHeight;
-        drawWidth = canvasHeight * imgRatio;
-        offsetX = (canvasWidth - drawWidth) / 2;
+        drawHeight = ch;
+        drawWidth = ch * imgRatio;
+        offsetX = (cw - drawWidth) / 2;
         offsetY = 0;
       } else {
-        drawWidth = canvasWidth;
-        drawHeight = canvasWidth / imgRatio;
+        drawWidth = cw;
+        drawHeight = cw / imgRatio;
         offsetX = 0;
-        offsetY = (canvasHeight - drawHeight) / 2;
+        offsetY = (ch - drawHeight) / 2;
       }
 
-      context.clearRect(0, 0, canvasWidth, canvasHeight);
       context.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
     }
 
+    sizeCanvas();
+
+    // Concurrent preloader: a small pool of workers pulls frames in ascending
+    // order so the earliest (first seen) frames arrive first.
+    let cancelled = false;
+    let nextIndex = 0;
+    const CONCURRENCY = 6;
+
+    function startWorker() {
+      if (cancelled || nextIndex >= FRAME_COUNT) return;
+      const idx = nextIndex++;
+      const img = new Image();
+      (img as any).decoding = 'async';
+      const done = () => {
+        if (cancelled) return;
+        if (img.naturalWidth) {
+          imagesRef.current[idx] = img;
+          loadedRef.current++;
+        }
+        if (idx === 0) {
+          drawFrame(0);
+          setIsInteractive(true);
+        }
+        // Keep the visible frame fresh as nearby frames finish loading.
+        if (Math.abs(idx - currentFrameRef.current) <= CONCURRENCY) {
+          drawFrame(currentFrameRef.current);
+        }
+        startWorker();
+      };
+      img.onload = done;
+      img.onerror = done;
+      img.src = framePath(idx);
+    }
+    for (let i = 0; i < CONCURRENCY; i++) startWorker();
+
     const isMobile = window.innerWidth < 768;
 
-    const initializeSequence = async () => {
-      const firstImg = new Image();
-      firstImg.src = IMAGES[0];
-      await new Promise((resolve) => {
-        firstImg.onload = () => {
-          imagesRef.current[0] = firstImg;
-          resolve(null);
-        };
-      });
-
-      render(0);
-      setIsInteractive(true);
-
-      const loadRest = () => {
-        IMAGES.slice(1).forEach((src, i) => {
-          const img = new Image();
-          img.src = src;
-          img.onload = () => {
-            imagesRef.current[i + 1] = img;
-          };
-        });
-      };
-
-      if ('requestIdleCallback' in window) {
-        (window as any).requestIdleCallback(loadRest);
-      } else {
-        setTimeout(loadRest, 100);
-      }
-    };
-
-    initializeSequence();
-
-    let scrollTrigger: globalThis.ScrollTrigger | null = null;
-    let autoPlayInterval: number | null = null;
-
-    if (isMobile) {
-      let frame = 0;
-      autoPlayInterval = window.setInterval(() => {
-        frame = (frame + 1) % IMAGES.length;
-        setCurrentChapter(frame);
-        render(frame);
-      }, 4000);
-
-      scrollTrigger = ScrollTrigger.create({
-        trigger: containerRef.current,
-        start: 'top top',
-        end: '+=200%',
-        pin: true,
-        scrub: 1.5,
-        onUpdate: (self) => {
-          const shift = Math.floor(self.progress * 2);
-          const targetFrame = (frame + shift) % IMAGES.length;
-          render(targetFrame);
-        },
-      });
-    } else {
-      scrollTrigger = ScrollTrigger.create({
-        trigger: containerRef.current,
-        start: 'top top',
-        end: `+=${(IMAGES.length - 1) * 100}%`,
-        pin: true,
-        scrub: 0.6,
-        onUpdate: (self) => {
-          const progress = self.progress;
-          const index = Math.min(IMAGES.length - 1, Math.floor(progress * IMAGES.length));
-          const chapter = getChapterFromProgress(progress);
-          setCurrentChapter(chapter);
-          animationState.current.currentFrame = index;
-          render(index);
-        },
-      });
-    }
+    const scrollTrigger = ScrollTrigger.create({
+      trigger: containerRef.current,
+      start: 'top top',
+      end: isMobile ? '+=240%' : '+=340%',
+      pin: true,
+      scrub: isMobile ? 1 : 0.5,
+      onUpdate: (self) => {
+        const progress = self.progress;
+        const index = Math.min(
+          FRAME_COUNT - 1,
+          Math.round(progress * (FRAME_COUNT - 1))
+        );
+        currentFrameRef.current = index;
+        setCurrentChapter(getChapterFromProgress(progress));
+        drawFrame(index);
+      },
+    });
 
     const handleResize = () => {
-      render(Math.floor(animationState.current.currentFrame || 0));
+      sizeCanvas();
+      drawFrame(currentFrameRef.current);
     };
-
     window.addEventListener('resize', handleResize);
 
     return () => {
-      if (scrollTrigger) scrollTrigger.kill();
-      if (autoPlayInterval) clearInterval(autoPlayInterval);
+      cancelled = true;
+      scrollTrigger.kill();
       window.removeEventListener('resize', handleResize);
       imagesRef.current = [];
+      loadedRef.current = 0;
     };
   }, []);
 
@@ -235,9 +232,9 @@ export default function CanvasHero() {
     return (
       <section className="relative h-screen w-full overflow-hidden bg-black">
         <img
-          src={IMAGES[0]}
+          src={POSTER}
           className="absolute inset-0 h-full w-full object-cover cinematic-grade"
-          alt="Aerial drone cinematography over Wyoming ranch land at first light"
+          alt="Aerial drone cinematography over Wyoming at first light"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-transparent to-black/65" />
         <HeroContent currentChapter={0} />
