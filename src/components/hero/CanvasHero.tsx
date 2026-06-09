@@ -27,8 +27,8 @@ const CHAPTERS: Chapter[] = [
     label: 'Open',
     headline: (
       <>
-        The land<br />
-        as a <em style={{ fontStyle: 'italic', color: '#e8dcc2', fontWeight: 'inherit' }}>film.</em>
+        Aerial real estate<br />
+        <em style={{ fontStyle: 'italic', color: '#e8dcc2', fontWeight: 'inherit' }}>photography.</em>
       </>
     ),
     body: null,
@@ -37,56 +37,9 @@ const CHAPTERS: Chapter[] = [
     alt: 'GND · SITE SURVEY',
     code: 'SW-2025-001',
   },
-  {
-    label: 'I · The pass',
-    headline: (
-      <>
-        Photographed<br />
-        in <em style={{ fontStyle: 'italic', color: '#e8dcc2', fontWeight: 'inherit' }}>motion.</em>
-      </>
-    ),
-    body: 'One continuous orbit. Eight kilometres of flight path.',
-    gps: "43°28'N 110°42'W",
-    location: 'JACKSON HOLE, WY',
-    alt: 'ALT 3,400 FT AGL',
-    code: 'SW-2025-002',
-  },
-  {
-    label: 'II · The vantage',
-    headline: (
-      <>
-        From eleven<br />
-        <em style={{ fontStyle: 'italic', color: '#e8dcc2', fontWeight: 'inherit' }}>thousand feet.</em>
-      </>
-    ),
-    body: 'The land is the listing. We photograph the ranch, the river, the sightline — then the house as the inevitable result.',
-    gps: "44°23'N 107°15'W",
-    location: 'BIGHORN BASIN, WY',
-    alt: 'ALT 11,000 FT AGL',
-    code: 'SW-2025-003',
-  },
-  {
-    label: 'III · The outcome',
-    headline: (
-      <>
-        A film that<br />
-        moves <em style={{ fontStyle: 'italic', color: '#e8dcc2', fontWeight: 'inherit' }}>markets.</em>
-      </>
-    ),
-    body: 'Our 2025 films closed an average of twenty-one days sooner than category.',
-    gps: "42°51'N 106°19'W",
-    location: 'CASPER, WY',
-    alt: 'RTH · FINAL DELIVERY',
-    code: 'SW-2025-004',
-  },
 ];
 
-const CHAPTER_BOUNDS = [0, 0.22, 0.46, 0.70, 1.0];
-
-function getChapterFromProgress(progress: number): number {
-  for (let i = CHAPTER_BOUNDS.length - 2; i >= 0; i--) {
-    if (progress >= CHAPTER_BOUNDS[i]) return i;
-  }
+function getChapterFromProgress(_progress: number): number {
   return 0;
 }
 
@@ -236,7 +189,7 @@ export default function CanvasHero() {
           className="absolute inset-0 h-full w-full object-cover cinematic-grade"
           alt="Aerial drone cinematography over Wyoming at first light"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-transparent to-black/65" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/10 to-black/80" />
         <HeroContent currentChapter={0} />
       </section>
     );
@@ -256,95 +209,23 @@ export default function CanvasHero() {
             </div>
           </div>
         )}
-        <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/55 via-transparent to-black/65" />
+        <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/40 via-black/10 to-black/80" />
         <HeroContent currentChapter={currentChapter} />
       </div>
     </section>
   );
 }
 
-function ChapterIndex({ currentChapter }: { currentChapter: number }) {
-  return (
-    <div
-      className="absolute right-14 z-10 hidden md:flex flex-col gap-5"
-      style={{ top: '50%', transform: 'translateY(-50%)' }}
-    >
-      {CHAPTERS.map((chapter, i) => (
-        <div
-          key={i}
-          className="flex items-center gap-3"
-          style={{
-            opacity: currentChapter === i ? 1 : 0.38,
-            transition: 'opacity 0.6s cubic-bezier(.4,0,.2,1)',
-          }}
-        >
-          <span
-            className="block h-[1px]"
-            style={{
-              width: currentChapter === i ? '64px' : '8px',
-              backgroundColor: currentChapter === i ? '#c2a574' : 'rgba(255,255,255,0.55)',
-              transition: 'width 0.6s cubic-bezier(.4,0,.2,1), background-color 0.6s cubic-bezier(.4,0,.2,1)',
-            }}
-          />
-          <span
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '13px',
-              letterSpacing: '0.16em',
-              textTransform: 'uppercase' as const,
-              color: 'white',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {chapter.label}
-          </span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 function HeroContent({ currentChapter }: { currentChapter: number }) {
-  const chapter = CHAPTERS[currentChapter];
-
   return (
     <>
       {/* Top-left brand plate */}
       <div
-        className="absolute top-24 left-6 md:left-14 z-10 text-white/70"
+        className="absolute top-24 left-6 md:left-10 z-10 text-white/70"
         style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-xs)', letterSpacing: '0.18em', textTransform: 'uppercase' }}
       >
-        <strong className="block text-white font-medium mb-1">
-          APEX <span style={{ color: '#c2a574' }}>/</span> WYOMING
-        </strong>
-        <span>CASPER <span style={{ color: '#c2a574' }}>·</span> LARAMIE <span style={{ color: '#c2a574' }}>·</span> STATEWIDE</span>
+        <span>LARAMIE, WY</span>
       </div>
-
-      {/* Top-right GPS + production HUD — transitions with chapter */}
-      <div
-        className="absolute top-24 right-6 md:right-14 z-10 text-right hidden md:block text-white/60"
-        style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-xs)', letterSpacing: '0.14em', textTransform: 'uppercase' }}
-      >
-        {CHAPTERS.map((ch, i) => (
-          <div
-            key={i}
-            style={{
-              position: i === 0 ? 'relative' : 'absolute',
-              top: i === 0 ? undefined : 0,
-              right: i === 0 ? undefined : 0,
-              opacity: currentChapter === i ? 1 : 0,
-              transition: 'opacity 0.6s cubic-bezier(.4,0,.2,1)',
-              pointerEvents: 'none',
-            }}
-          >
-            <div className="text-white/80 mb-1">{ch.gps} <span style={{ color: '#c2a574' }}>·</span> {ch.location}</div>
-            <div>{ch.alt} <span style={{ color: '#c2a574' }}>·</span> {ch.code}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* Right-edge chapter index */}
-      <ChapterIndex currentChapter={currentChapter} />
 
       {/* Chapter text — all chapters stacked at same anchor */}
       <div className="absolute inset-0 flex flex-col justify-end px-6 md:px-14 pb-24 text-white z-5">
@@ -363,53 +244,22 @@ function HeroContent({ currentChapter }: { currentChapter: number }) {
                 pointerEvents: currentChapter === i ? 'auto' : 'none',
               }}
             >
-              <div
-                className="flex items-center gap-3.5 text-white/60"
-                style={{
-                  marginBottom: '1.5rem',
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: 'var(--text-xs)',
-                  letterSpacing: '0.18em',
-                  textTransform: 'uppercase',
-                }}
-              >
-                <span className="inline-block h-[1px] bg-white/50" style={{ width: '54px' }} />
-                <span>Wyoming Drone Cinematography · Est. 2014</span>
-              </div>
               <h1
                 className="serif m-0 max-w-[14ch]"
-                style={{ fontSize: 'clamp(48px, 7.5vw, 128px)', lineHeight: 0.94, letterSpacing: '-0.025em' }}
+                style={{ fontSize: 'clamp(38px, 5.5vw, 92px)', lineHeight: 0.94, letterSpacing: '-0.025em', textShadow: '0 2px 24px rgba(0,0,0,0.55)' }}
               >
                 {ch.headline}
               </h1>
               {ch.body && (
                 <p
                   className="font-body text-white/70 leading-relaxed m-0"
-                  style={{ marginTop: '1.5rem', fontSize: 'var(--text-sm)', maxWidth: '42ch' }}
+                  style={{ marginTop: '1.5rem', fontSize: 'var(--text-sm)', maxWidth: '42ch', textShadow: '0 1px 14px rgba(0,0,0,0.5)' }}
                 >
                   {ch.body}
                 </p>
               )}
             </div>
           ))}
-        </div>
-
-        <div
-          className="flex justify-between items-center pt-5 border-t border-white/18"
-          style={{ marginTop: '2rem' }}
-        >
-          <span
-            className="text-white/55 hidden md:block"
-            style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-xs)', letterSpacing: '0.14em', textTransform: 'uppercase' }}
-          >
-            FAA Part 107 Certified · Fully Insured
-          </span>
-          <span
-            className="text-white/40 hidden md:block"
-            style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-xs)', letterSpacing: '0.14em', textTransform: 'uppercase' }}
-          >
-            8K · 24FPS · PRORES RAW
-          </span>
         </div>
       </div>
 
