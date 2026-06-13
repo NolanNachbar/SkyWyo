@@ -27,7 +27,6 @@ export default function ScrubHero({ headline, sub }: Props) {
   const trackRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const copyRef = useRef<HTMLDivElement>(null);
-  const closeRef = useRef<HTMLDivElement>(null);
   const cueRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -81,18 +80,13 @@ export default function ScrubHero({ headline, sub }: Props) {
         currentIdx = idx;
       }
 
-      // headline fades out 0.45 -> 0.68; closing line in 0.74 -> 0.9
-      const copy = copyRef.current, close = closeRef.current, cue = cueRef.current;
+      // headline fades out 0.45 -> 0.68
+      const copy = copyRef.current, cue = cueRef.current;
       if (copy) {
         const o = p < 0.45 ? 1 : p > 0.68 ? 0 : 1 - (p - 0.45) / 0.23;
         copy.style.opacity = o.toFixed(3);
         copy.style.transform = `translateY(${(-28 * (1 - o)).toFixed(1)}px)`;
         copy.style.pointerEvents = o < 0.4 ? 'none' : 'auto';
-      }
-      if (close) {
-        const o = p < 0.74 ? 0 : p > 0.9 ? 1 : (p - 0.74) / 0.16;
-        close.style.opacity = o.toFixed(3);
-        close.style.transform = `translateY(${(20 * (1 - o)).toFixed(1)}px)`;
       }
       if (cue) cue.style.opacity = p > 0.06 ? '0' : '1';
     }
@@ -158,13 +152,6 @@ export default function ScrubHero({ headline, sub }: Props) {
           </a>
           <div className="micro">FAA Part 107 certified · Wyoming owned &amp; operated · First shoot costs you nothing</div>
         </div>
-
-        {!simple && (
-          <div className="hero-close" ref={closeRef} aria-hidden="true">
-            <div className="big">This is one pass of the actual drone.</div>
-            <div className="small">Shot over Wyoming, scrubbed by your scroll, frame by frame.</div>
-          </div>
-        )}
 
         {!simple && (
           <div className="scroll-cue" ref={cueRef} aria-hidden="true">

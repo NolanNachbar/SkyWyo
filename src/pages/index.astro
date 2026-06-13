@@ -19,8 +19,8 @@ const faqs = [
     a: "Yes. SkyWyo is an FAA Part 107 certified commercial drone operation, flying an FAA-registered aircraft within federal airspace rules.",
   },
   {
-    q: "Do you shoot land and acreage, or only the house?",
-    a: "Acreage is where aerial matters most. We capture the land, the views, and the approach that ground-level photos leave out, which is the part buyers are really paying for on a rural Wyoming listing.",
+    q: "Do you only shoot land and acreage?",
+    a: "We shoot every kind of listing: homes in town, vacant lots, acreage, and large ranches. Aerial captures the whole property, the setting, and the approach that ground-level photos leave out, which is what buyers want to see before they ever drive out.",
   },
   {
     q: "What areas of Wyoming do you serve?",
@@ -97,8 +97,8 @@ const workShots = [
   <div id="top">
     <ScrubHero
       client:load
-      headline="You're selling the land. Ground level photos only show the house."
-      sub="Drone photos and a 60-second listing video for Cheyenne and Laramie acreage. Edited, MLS-ready, in your inbox in 48 hours."
+      headline="The whole listing from the air."
+      sub="We shoot your first listing free, anywhere in Wyoming, and you keep the footage even if you never call again. Edited and MLS-ready in 48 hours."
     />
 
     <!-- The problem -->
@@ -140,16 +140,17 @@ const workShots = [
           <div class="card reveal">
             <div class="num">03</div>
             <h3>48-hour turnaround</h3>
-            <p>Shoot one day, footage in your inbox the next. The listing goes live with the video, not two weeks after the first price cut.</p>
+            <p>Shoot one day, footage in your inbox the next. The listing goes live with the video the same week it hits the market.</p>
           </div>
         </div>
+        <p class="lead reveal" style="text-align: center; max-width: 60ch; margin: 40px auto 0;">All three together is one Sky Pro shoot, $349. Your first shoot is free, and larger acreage or luxury listings are quoted on request.</p>
       </div>
     </section>
 
     <!-- Recent work -->
     <section class="work" id="work">
       <div class="wrap">
-        <span class="eyebrow reveal">Recent work</span>
+        <span class="eyebrow reveal">Our footage</span>
         <h2 class="reveal">The footage speaks for itself.</h2>
         <div class="slot-grid">
           {workShots.map((shot) => (
@@ -158,7 +159,7 @@ const workShots = [
             </div>
           ))}
         </div>
-        <p class="slot-note reveal">Frames pulled straight from the hero flight above. Real footage, no stock. Your listing's stills slot in right here after the first shoot.</p>
+        <p class="slot-note reveal">Every frame here is real SkyWyo footage shot over Wyoming. No stock, no rentals. Your property is next.</p>
       </div>
     </section>
 
@@ -170,13 +171,7 @@ const workShots = [
           <h2 class="reveal" style="max-width: 24ch; margin: 0 auto;">Media costs a fraction of your commission.</h2>
           <p class="lead reveal" style="max-width: 60ch; margin: 20px auto 0;">A Sky Pro shoot is $349. One closing is thousands in commission, at any price point, so good listing media pays for itself many times over on a single sale.</p>
         </div>
-        <div class="eq reveal" role="img" aria-label="Per Zillow 2024, listings with premium media sell for about 2 percent more and are 20 percent more likely to go under contract within 14 days">
-          <div class="term result"><div class="v">2%</div><div class="k">Higher sale price</div></div>
-          <div class="op">·</div>
-          <div class="term result"><div class="v">20%</div><div class="k">More likely under contract in 14 days</div></div>
-        </div>
-        <p class="slot-note reveal" style="text-align: center; margin-top: 14px;">Listings with premium media, per Zillow (2024).</p>
-        <p class="kicker reveal">Premium media helps a listing sell for more and sell sooner, so you earn your commission faster. And the first shoot is free.</p>
+        <p class="kicker reveal">Stronger listing media helps a property draw more interest and sell sooner, so you earn your commission faster. And the first shoot is free.</p>
       </div>
     </section>
 
