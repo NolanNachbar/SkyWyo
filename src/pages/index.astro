@@ -94,6 +94,23 @@ const workShots = [
 <BaseLayout>
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
+  <!-- Persistent header: hidden during the hero (which has its own nav),
+       slides in as a frosted bar once you scroll past the hero. Desktop. -->
+  <header class="site-header" id="siteHeader" aria-label="Site">
+    <div class="wrap site-header__inner">
+      <a class="logo" href="#top">SKY<span>WYO</span></a>
+      <div class="site-header__right">
+        <span class="site-header__cred">FAA Part 107 Certified · Wyoming</span>
+        <a class="btn btn--compact" href="#book">Book a free shoot</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Persistent Book bar, pinned to the bottom on mobile (thumb-reachable). -->
+  <div class="book-bar" id="bookBar">
+    <a class="btn" href="#book">Book your free first shoot</a>
+  </div>
+
   <div id="top">
     <ScrubHero
       client:load
@@ -274,6 +291,34 @@ const workShots = [
   }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
 
   document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+  // Persistent CTA: reveal the sticky header + mobile book bar once the hero
+  // is scrolled past, then hide the mobile bar while the booking form is in view.
+  const header = document.getElementById('siteHeader');
+  const bookBar = document.getElementById('bookBar');
+  const heroTrack = document.querySelector('.hero-track');
+  let pastHero = false;
+  let atBooking = false;
+
+  function syncCta() {
+    header?.classList.toggle('is-visible', pastHero);
+    bookBar?.classList.toggle('is-visible', pastHero && !atBooking);
+  }
+
+  if (heroTrack) {
+    new IntersectionObserver(([entry]) => {
+      pastHero = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+      syncCta();
+    }, { threshold: 0 }).observe(heroTrack);
+  }
+
+  const bookSection = document.getElementById('book');
+  if (bookSection) {
+    new IntersectionObserver(([entry]) => {
+      atBooking = entry.isIntersecting;
+      syncCta();
+    }, { threshold: 0 }).observe(bookSection);
+  }
 </script>
 
 <style>
