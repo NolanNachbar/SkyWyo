@@ -6,14 +6,14 @@ interface Props {
 	description?: string;
 }
 
-const { 
-	title = "SKYWYO — Cinematic Aerial Cinematography for Ranches & Estates",
-	description = "SkyWyo specializes in cinematic aerial cinematography for ranches, luxury real estate, architecture, and western landscapes. FAA Part 107 certified and fully insured."
+const {
+	title = "SkyWyo — Drone photo & video for Wyoming luxury listings",
+	description = "Drone photo & video for Cheyenne and Laramie's luxury listings. Edited, MLS-ready, back in 48 hours. FAA Part 107 certified, Wyoming owned & operated. Your first shoot is free."
 } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -35,183 +35,9 @@ const {
 		<meta name="twitter:image" content="https://skywyo.com/og-image.jpg" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Cinzel:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+		<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 	</head>
-	<body class="bg-ink text-paper selection:bg-accent selection:text-ink font-body">
-		<div id="progress-bar" class="fixed top-0 left-0 right-0 h-[1px] bg-transparent z-[101] pointer-events-none">
-			<div id="progress-fill" class="h-full bg-paper w-0 transition-all duration-150 ease-linear"></div>
-		</div>
-
-		<div id="cursor-dot" class="fixed w-2 h-2 bg-accent rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-300 hidden md:block"></div>
-
-		<nav id="main-nav" class="fixed top-0 left-0 right-0 z-100 flex items-center justify-between px-6 md:px-10 py-[22px] mix-blend-difference text-white transition-[padding,background] duration-500 ease-soft">
-			<a href="/" class="font-display text-[var(--text-sm)] font-medium tracking-data uppercase flex items-center">
-				SKYWYO
-			</a>
-			<ul class="hidden md:flex gap-9 list-none m-0 p-0 text-[var(--text-xs)] tracking-nav uppercase font-normal font-display">
-				<li><a href="#work" class="opacity-85 hover:opacity-100 transition-opacity duration-300">Selected work</a></li>
-				<li><a href="#capabilities" class="opacity-85 hover:opacity-100 transition-opacity duration-300">Capabilities</a></li>
-				<li><a href="#process" class="opacity-85 hover:opacity-100 transition-opacity duration-300">Process</a></li>
-				<li><a href="#studio" class="opacity-85 hover:opacity-100 transition-opacity duration-300">Studio</a></li>
-			</ul>
-			<a href="#inquire" class="hidden md:inline-block font-display text-[var(--text-xs)] tracking-nav uppercase border border-white/40 px-5 py-2.5 rounded-full hover:bg-white hover:text-black hover:border-white transition-all duration-400 ease-soft">
-				Inquire
-			</a>
-			<button id="mobile-menu-toggle" class="md:hidden font-display text-[var(--text-xs)] tracking-nav uppercase border border-white/40 px-4 py-2 rounded-full">
-				Menu
-			</button>
-		</nav>
-
-		<div id="mobile-menu" class="fixed inset-0 bg-ink z-[150] translate-x-full transition-transform duration-500 ease-soft flex flex-col items-center justify-center gap-8">
-			<button id="mobile-menu-close" class="absolute top-8 right-8 font-display text-[var(--text-xs)] tracking-nav uppercase">Close</button>
-			<ul class="flex flex-col items-center gap-8 list-none m-0 p-0 text-[var(--text-2xl)] serif tracking-tight">
-				<li><a href="#work" class="mobile-nav-link">Selected work</a></li>
-				<li><a href="#capabilities" class="mobile-nav-link">Capabilities</a></li>
-				<li><a href="#process" class="mobile-nav-link">Process</a></li>
-				<li><a href="#studio" class="mobile-nav-link">Studio</a></li>
-			</ul>
-			<a href="#inquire" class="mobile-nav-link font-display text-[var(--text-lg)] tracking-nav uppercase border border-white/40 px-8 py-4 rounded-full">Inquire</a>
-		</div>
-
-		<main>
-			<slot />
-		</main>
-
-		<div class="md:hidden fixed bottom-6 left-6 right-6 z-[90]">
-			<a href="#inquire" class="flex items-center justify-center w-full bg-paper text-ink py-5 rounded-full font-display text-[var(--text-xs)] tracking-plate uppercase font-semibold shadow-2xl">
-				Inquire About Production
-			</a>
-		</div>
-
-		<footer class="bg-[#08080a] text-paper-dim page-px py-24 md:pt-[90px] md:pb-12 border-t border-rule mt-24">
-			<div class="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr_1fr] gap-15 md:gap-[60px]">
-				<div class="brand-block">
-					<div class="text-paper font-display text-[var(--text-base)] font-medium tracking-data uppercase">SKYWYO</div>
-					<p class="mt-6 text-[var(--text-sm)] leading-relaxed max-w-[34ch] font-body">A cinematographic studio for Wyoming's ranches, commercial assets, and residential estates. Casper · Laramie · Jackson Hole.</p>
-					
-					<div class="mt-10 pt-10 border-t border-rule/50 hidden md:block">
-						<h6 class="font-display text-[var(--text-xs)] tracking-plate uppercase text-paper-mute mb-4">Operational Authority</h6>
-						<p class="text-[var(--text-xs)] leading-relaxed max-w-[40ch] text-paper-mute italic font-body">
-							Specializing in cinematic property storytelling across the Mountain West. Our operations prioritize local expertise, statewide mobility, and the rugged professionalism Wyoming demands.
-						</p>
-					</div>
-				</div>
-				<div>
-					<h5 class="text-paper font-display text-[var(--text-xs)] font-medium tracking-plate uppercase mb-5.5">Studio</h5>
-					<ul class="list-none p-0 m-0 flex flex-col gap-3 text-[var(--text-sm)] font-body">
-						<li><a href="#" class="hover:text-paper transition-colors">Casper Hub</a></li>
-						<li><a href="#" class="hover:text-paper transition-colors">Laramie Hub</a></li>
-						<li><a href="#" class="hover:text-paper transition-colors">Directors</a></li>
-						<li><a href="#" class="hover:text-paper transition-colors">Journal</a></li>
-					</ul>
-				</div>
-				<div>
-					<h5 class="text-paper font-display text-[var(--text-xs)] font-medium tracking-plate uppercase mb-5.5">Services</h5>
-					<ul class="list-none p-0 m-0 flex flex-col gap-3 text-[var(--text-sm)] font-body">
-						<li><a href="#" class="hover:text-paper transition-colors">Residential</a></li>
-						<li><a href="#" class="hover:text-paper transition-colors">Commercial</a></li>
-						<li><a href="#" class="hover:text-paper transition-colors">Ranch & Land</a></li>
-						<li><a href="#" class="hover:text-paper transition-colors">Archive</a></li>
-					</ul>
-				</div>
-				<div>
-					<h5 class="text-paper font-display text-[var(--text-xs)] font-medium tracking-plate uppercase mb-5.5">Contact</h5>
-					<ul class="list-none p-0 m-0 flex flex-col gap-3 text-[var(--text-sm)] font-body">
-						<li><a href="mailto:hello@skywyo.com" class="hover:text-paper transition-colors">hello@skywyo.com</a></li>
-						<li><a href="tel:+13075550184" class="hover:text-paper transition-colors">+1 307 555 0184</a></li>
-						<li><a href="#" class="hover:text-paper transition-colors">Casper · Laramie · Statewide</a></li>
-						<li><a href="#" class="hover:text-paper transition-colors">Instagram · Vimeo</a></li>
-					</ul>
-				</div>
-			</div>
-			<div class="max-w-[1400px] mx-auto mt-20 pt-6 border-t border-rule flex flex-col md:flex-row justify-between font-display text-[var(--text-xs)] tracking-nav uppercase text-paper-mute gap-3.5">
-				<span>© MMXXVI SkyWyo Studio Inc.</span>
-				<span>FAA Part 107 · Fully Insured · statewide Ops</span>
-				<span>Site v.05 — Crafted in Wyoming</span>
-			</div>
-		</footer>
-
-		<script>
-			import Lenis from 'lenis';
-			import { gsap } from 'gsap';
-			import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-
-			gsap.registerPlugin(ScrollTrigger);
-
-			const isLowMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-			// Initialize Lenis smooth scroll
-			const lenis = !isLowMotion ? new Lenis({
-				lerp: 0.08,
-				duration: 1.4,
-				syncTouch: true,
-				autoRaf: false,
-			}) : null;
-
-			if (lenis) {
-				function update(time: number) {
-					lenis.raf(time * 1000);
-				}
-				gsap.ticker.add(update);
-			}
-			
-			ScrollTrigger.refresh();
-
-			// Cursor Dot
-			const cursor = document.getElementById('cursor-dot');
-			if (cursor && !isLowMotion) {
-				window.addEventListener('mousemove', (e) => {
-					cursor.style.opacity = '1';
-					cursor.style.left = e.clientX + 'px';
-					cursor.style.top = e.clientY + 'px';
-				});
-
-				document.querySelectorAll('a, button').forEach(el => {
-					el.addEventListener('mouseenter', () => cursor.classList.add('scale-[3]', 'bg-white'));
-					el.addEventListener('mouseleave', () => cursor.classList.remove('scale-[3]', 'bg-white'));
-				});
-			}
-
-			// Mobile Menu
-			const menuToggle = document.getElementById('mobile-menu-toggle');
-			const menuClose = document.getElementById('mobile-menu-close');
-			const menu = document.getElementById('mobile-menu');
-			const menuLinks = document.querySelectorAll('.mobile-nav-link');
-
-			const toggleMenu = (open: boolean) => {
-				if (menu) {
-					menu.style.transform = open ? 'translateX(0)' : 'translateX(100%)';
-					document.body.style.overflow = open ? 'hidden' : '';
-				}
-			};
-
-			menuToggle?.addEventListener('click', () => toggleMenu(true));
-			menuClose?.addEventListener('click', () => toggleMenu(false));
-			menuLinks.forEach(link => link.addEventListener('click', () => toggleMenu(false)));
-
-			// Progress bar & Nav scroll effect
-			const progressBar = document.getElementById('progress-fill');
-			const nav = document.getElementById('main-nav');
-
-			window.addEventListener('scroll', () => {
-				const scrollTop = window.scrollY;
-				const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-				const scrollPercent = (scrollTop / docHeight) * 100;
-				
-				if (progressBar) {
-					progressBar.style.width = scrollPercent + '%';
-				}
-
-				if (nav) {
-					if (scrollTop > 80) {
-						nav.classList.add('py-[14px]', 'bg-ink/80', 'backdrop-blur-md');
-						nav.classList.remove('py-[22px]');
-					} else {
-						nav.classList.add('py-[22px]');
-						nav.classList.remove('py-[14px]', 'bg-ink/80', 'backdrop-blur-md');
-					}
-				}
-			});
-		</script>
+	<body>
+		<slot />
 	</body>
 </html>
