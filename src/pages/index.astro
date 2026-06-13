@@ -3,30 +3,84 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ScrubHero from '../components/hero/ScrubHero';
 import BookForm from '../components/book/BookForm';
 
+// FAQ content — rendered on the page AND mirrored into FAQPage schema below.
+// Google requires the schema text to match the visible page text.
+const faqs = [
+  {
+    q: "How much does drone real estate photography cost in Cheyenne and Laramie?",
+    a: "Your first shoot is free. After that, a standard package is $349 and includes an edited aerial photo set plus a 60-second branded listing video, delivered in 48 hours. Larger listings and add-ons are quoted on top.",
+  },
+  {
+    q: "How fast will I get the photos and video?",
+    a: "48 hours from the shoot to your inbox, edited and MLS-ready, so the listing goes live with the footage instead of weeks later.",
+  },
+  {
+    q: "Are you FAA certified?",
+    a: "Yes. SkyWyo is an FAA Part 107 certified commercial drone operation, flying an FAA-registered aircraft within federal airspace rules.",
+  },
+  {
+    q: "Do you shoot land and acreage, or only the house?",
+    a: "Acreage is where aerial matters most. We capture the land, the views, and the approach that ground-level photos leave out, which is the part buyers are really paying for on a rural Wyoming listing.",
+  },
+  {
+    q: "What areas of Wyoming do you serve?",
+    a: "We are based in Cheyenne and Laramie and serve real estate listings across the whole state of Wyoming.",
+  },
+  {
+    q: "Do I have to sign a contract or pay anything upfront?",
+    a: "No. The first shoot is free, with no contract and no deposit. You decide whether to keep working with us after you see the footage.",
+  },
+];
+
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  "name": "SkyWyo",
-  "description": "Drone photo and video for Cheyenne and Laramie's luxury real estate listings. Edited, MLS-ready, back in 48 hours. FAA Part 107 certified, Wyoming owned and operated.",
-  "url": "https://skywyo.com",
-  "areaServed": [
-    { "@type": "City", "name": "Cheyenne" },
-    { "@type": "City", "name": "Laramie" },
-    { "@type": "State", "name": "Wyoming" }
-  ],
-  "address": {
-    "@type": "PostalAddress",
-    "addressRegion": "WY",
-    "addressCountry": "US"
-  },
-  "makesOffer": {
-    "@type": "Offer",
-    "itemOffered": {
-      "@type": "Service",
-      "name": "Aerial real estate photo & video",
-      "description": "Edited aerial photo set and a 60-second branded listing video, delivered in 48 hours. First shoot free."
+  "@graph": [
+    {
+      "@type": "LocalBusiness",
+      "@id": "https://skywyo.com/#business",
+      "name": "SkyWyo",
+      "description": "Drone photo and video for Wyoming real estate listings. Based in Cheyenne and Laramie, serving the whole state. Edited, MLS-ready in 48 hours. FAA Part 107 certified. First shoot free.",
+      "url": "https://skywyo.com",
+      "image": "https://skywyo.com/og-image.jpg",
+      "email": "info@skywyo.com",
+      "priceRange": "$$",
+      "foundingDate": "2026",
+      // sameAs: add Google Business Profile, Instagram, Facebook, YouTube URLs once those exist.
+      "areaServed": [
+        { "@type": "State", "name": "Wyoming" },
+        { "@type": "City", "name": "Cheyenne" },
+        { "@type": "City", "name": "Laramie" }
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Cheyenne",
+        "addressRegion": "WY",
+        "addressCountry": "US"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 41.1400,
+        "longitude": -104.8202
+      },
+      "makesOffer": {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Aerial real estate photo and video",
+          "description": "Edited aerial photo set and a 60-second branded listing video, delivered in 48 hours. First shoot free."
+        }
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://skywyo.com/#faq",
+      "mainEntity": faqs.map((f) => ({
+        "@type": "Question",
+        "name": f.q,
+        "acceptedAnswer": { "@type": "Answer", "text": f.a },
+      })),
     }
-  }
+  ]
 };
 
 // Portfolio stills — clear drone frames from our own footage.
@@ -43,25 +97,25 @@ const workShots = [
   <div id="top">
     <ScrubHero
       client:load
-      headline="Sell the land, not just the house."
-      sub="Drone photo & video for Cheyenne and Laramie's luxury listings — edited, MLS-ready, back in 48 hours."
+      headline="You're selling the land. Ground level photos only show the house."
+      sub="Drone photos and a 60-second listing video for Cheyenne and Laramie acreage. Edited, MLS-ready, in your inbox in 48 hours."
     />
 
     <!-- The problem -->
     <section class="pain" id="problem">
       <div class="wrap">
         <span class="eyebrow reveal">The problem</span>
-        <h2 class="reveal">Your $700K listing is being shot like a starter home.</h2>
+        <h2 class="reveal">From the ground, every listing looks the same.</h2>
         <div class="cols">
           <p class="lead reveal">
-            Out here, the asset is the land — the acreage, the views, the distance to the
-            nearest neighbor. Ground-level photos can't show any of it. So buyers scroll
-            past a property worth driving to, because from the driveway it looks like
-            every other house.
+            Ground-level photos show the same few angles every other listing shows. They
+            leave out what makes a property worth the drive: the land and the views on
+            acreage, the setting and the layout in town. Aerial shows a buyer the whole
+            property before they ever pull into the driveway.
           </p>
           <div class="enemy reveal">
-            Phone photos price your listing down.
-            <small>The same buyers who skip past them stop on aerial footage — because almost no listing in the county has it.</small>
+            Phone photos make your listing look like every other one.
+            <small>Buyers slow down on aerial. One frame shows the whole property in context, which a ground-level photo can't.</small>
           </div>
         </div>
       </div>
@@ -71,22 +125,22 @@ const workShots = [
     <section class="deliver" id="deliverables">
       <div class="wrap">
         <span class="eyebrow reveal">What you get</span>
-        <h2 class="reveal">Concrete deliverables. No packages to decode.</h2>
+        <h2 class="reveal">Three deliverables, named and priced. Nothing to decode.</h2>
         <div class="grid">
           <div class="card reveal">
             <div class="num">01</div>
             <h3>Edited aerial photo set</h3>
-            <p>High-resolution stills of the property, the acreage, and the approach — color-corrected, MLS- and web-sized.</p>
+            <p>High-resolution stills of the house, the acreage, and the approach. Color-corrected and sized for MLS and web. Yours to keep.</p>
           </div>
           <div class="card reveal">
             <div class="num">02</div>
             <h3>A 60-second listing video</h3>
-            <p>One branded cut, ready for MLS, YouTube, and social — with your name and brokerage on the end card.</p>
+            <p>One branded cut for MLS, YouTube, and social, with your name and brokerage on the end card.</p>
           </div>
           <div class="card reveal">
             <div class="num">03</div>
-            <h3>Back in 48 hours</h3>
-            <p>Shoot to inbox in two days. Your listing goes live with the footage, not two weeks after the price cut.</p>
+            <h3>48-hour turnaround</h3>
+            <p>Shoot one day, footage in your inbox the next. The listing goes live with the video, not two weeks after the first price cut.</p>
           </div>
         </div>
       </div>
@@ -104,7 +158,7 @@ const workShots = [
             </div>
           ))}
         </div>
-        <p class="slot-note reveal">Frames pulled straight from the hero flight above — real footage, no stock. Your listing's stills slot in right here after the first shoot.</p>
+        <p class="slot-note reveal">Frames pulled straight from the hero flight above. Real footage, no stock. Your listing's stills slot in right here after the first shoot.</p>
       </div>
     </section>
 
@@ -113,16 +167,16 @@ const workShots = [
       <div class="wrap">
         <div style="text-align: center;">
           <span class="eyebrow reveal">The math</span>
-          <h2 class="reveal" style="max-width: 20ch; margin: 0 auto 0;">One closing pays for years of media.</h2>
+          <h2 class="reveal" style="max-width: 24ch; margin: 0 auto;">Media costs a fraction of your commission.</h2>
+          <p class="lead reveal" style="max-width: 60ch; margin: 20px auto 0;">A Sky Pro shoot is $349. One closing is thousands in commission, at any price point, so good listing media pays for itself many times over on a single sale.</p>
         </div>
-        <div class="eq reveal" role="img" aria-label="$700,000 listing times 2.5% commission equals $17,500 to you">
-          <div class="term"><div class="v">$700,000</div><div class="k">Your listing</div></div>
-          <div class="op">×</div>
-          <div class="term"><div class="v">2.5%</div><div class="k">Your side</div></div>
-          <div class="op">=</div>
-          <div class="term result"><div class="v">$17,500</div><div class="k">Your commission</div></div>
+        <div class="eq reveal" role="img" aria-label="Per Zillow 2024, listings with premium media sell for about 2 percent more and are 20 percent more likely to go under contract within 14 days">
+          <div class="term result"><div class="v">2%</div><div class="k">Higher sale price</div></div>
+          <div class="op">·</div>
+          <div class="term result"><div class="v">20%</div><div class="k">More likely under contract in 14 days</div></div>
         </div>
-        <p class="kicker reveal">The footage that helps it sell costs you nothing to try — the first shoot is free.</p>
+        <p class="slot-note reveal" style="text-align: center; margin-top: 14px;">Listings with premium media, per Zillow (2024).</p>
+        <p class="kicker reveal">Premium media helps a listing sell for more and sell sooner, so you earn your commission faster. And the first shoot is free.</p>
       </div>
     </section>
 
@@ -131,12 +185,12 @@ const workShots = [
       <div class="wrap">
         <span class="eyebrow reveal" style="color: #9cc1dc;">The promise</span>
         <h2 class="reveal">Your first shoot is <em>free.</em></h2>
-        <p class="lead reveal">You only keep working with me if you love the footage. No contract, no deposit, no risk — if it doesn't make your listing look more expensive, you've lost nothing but an hour.</p>
+        <p class="lead reveal">You have never seen our work on one of your listings, so we are not asking you to trust it sight unseen. SkyWyo flies the property, edits it, and sends it over. If it doesn't make the listing look more expensive than the ground photos did, you keep the footage and we're done. No contract, no deposit, no card. The only thing you risk is an hour of access.</p>
         <a class="btn btn--lg btn--on-dark reveal" href="#book">Book your free first shoot</a>
         <div class="chips reveal">
           <span class="chip">No contract</span>
           <span class="chip">No deposit</span>
-          <span class="chip">Keep the footage decision yours</span>
+          <span class="chip">You keep the footage either way</span>
         </div>
       </div>
     </section>
@@ -149,20 +203,36 @@ const workShots = [
         <div class="grid">
           <div class="fact reveal">
             <h3>FAA Part 107 certified</h3>
-            <p>A licensed commercial drone pilot — the certification the FAA requires for paid real-estate flights.</p>
+            <p>The commercial license the FAA requires to fly a paid real-estate shoot. Legal to put the footage on a listing.</p>
           </div>
           <div class="fact reveal">
-            <h3>Registered aircraft</h3>
-            <p>Flying an FAA-registered drone, operated within federal airspace rules.</p>
+            <h3>FAA-registered aircraft</h3>
+            <p>Flown inside federal airspace rules, so nothing about the shoot puts your listing at risk.</p>
           </div>
           <div class="fact reveal">
-            <h3>Wyoming owned &amp; operated</h3>
-            <p>Based in Cheyenne and Laramie — not an out-of-state aggregator reselling a stranger's time.</p>
+            <h3>Cheyenne and Laramie based</h3>
+            <p>A local crew you can call, not an out-of-state aggregator reselling a stranger's flight time.</p>
           </div>
         </div>
         <div class="testimonial-slot reveal">
           <strong>Agent testimonials will live here.</strong>
-          Reserved until the first clients have footage in hand — nothing on this page is invented.
+          Reserved until the first clients have footage in hand. Nothing on this page is invented.
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq" id="faq">
+      <div class="wrap">
+        <span class="eyebrow reveal">Questions</span>
+        <h2 class="reveal">Drone real estate photography in Cheyenne and Laramie</h2>
+        <div class="faq-list">
+          {faqs.map((f) => (
+            <div class="faq-item reveal">
+              <h3>{f.q}</h3>
+              <p>{f.a}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -173,7 +243,7 @@ const workShots = [
         <div class="inner">
           <span class="eyebrow reveal">Get started</span>
           <h2 class="reveal">Book your free first shoot.</h2>
-          <p class="lead reveal" style="margin: 0 auto;">Tell me where the listing is. I'll confirm a flight window within one business day.</p>
+          <p class="lead reveal" style="margin: 0 auto;">Send us the listing address. We confirm a flight window within one business day.</p>
           <div class="reveal">
             <BookForm client:visible />
           </div>
@@ -186,11 +256,11 @@ const workShots = [
         <div class="row">
           <span class="logo">SKYWYO</span>
           <div class="meta">
-            <span>Cheyenne &amp; Laramie, Wyoming</span>
+            <span>Based in Cheyenne &amp; Laramie · Serving all of Wyoming</span>
             <span>FAA Part 107 Certified</span>
           </div>
           <span class="contact">
-            <a href="mailto:nolan@dewittdroneservices.com">nolan@dewittdroneservices.com</a>
+            <a href="mailto:info@skywyo.com">info@skywyo.com</a>
           </span>
         </div>
       </div>
@@ -210,3 +280,30 @@ const workShots = [
 
   document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
 </script>
+
+<style>
+  .faq-list {
+    margin-top: 44px;
+    max-width: 820px;
+  }
+  .faq-item {
+    padding: 26px 0;
+    border-top: 1px solid var(--line, #e6e2d9);
+  }
+  .faq-item:last-child {
+    border-bottom: 1px solid var(--line, #e6e2d9);
+  }
+  .faq-item h3 {
+    margin: 0 0 8px;
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  .faq-item p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--body, #3f4750);
+    max-width: 70ch;
+  }
+</style>

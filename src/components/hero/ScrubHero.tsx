@@ -156,13 +156,13 @@ export default function ScrubHero({ headline, sub }: Props) {
             Book your free first shoot
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg>
           </a>
-          <div className="micro">FAA Part 107 certified · Wyoming owned &amp; operated · First shoot free</div>
+          <div className="micro">FAA Part 107 certified · Wyoming owned &amp; operated · First shoot costs you nothing</div>
         </div>
 
         {!simple && (
           <div className="hero-close" ref={closeRef} aria-hidden="true">
             <div className="big">This is one pass of the actual drone.</div>
-            <div className="small">Shot over Wyoming — scrubbed by your scroll, frame by frame.</div>
+            <div className="small">Shot over Wyoming, scrubbed by your scroll, frame by frame.</div>
           </div>
         )}
 
